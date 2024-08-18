@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutoCalculator.IExecute
+namespace AutoCalculator.Expression
 {
-    class Fraction : IExecute
+    class Fraction : IExpression
     {
         public int Numerator { get; private set; }
         public int Denominator { get; private set; }

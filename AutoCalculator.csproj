@@ -43,17 +43,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IExecute\Addition.cs" />
-    <Compile Include="IExecute\Fraction.cs" />
-    <Compile Include="IExecute\IExecute.cs" />
+    <Compile Include="Expression\Addition.cs" />
+    <Compile Include="Expression\Division.cs" />
+    <Compile Include="Expression\Fraction.cs" />
+    <Compile Include="Expression\IExpression.cs" />
+    <Compile Include="Expression\Multiplication.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IExecute\Subtraction.cs" />
-    <Compile Include="IExecute\Variable.cs" />
+    <Compile Include="Expression\Subtraction.cs" />
+    <Compile Include="Expression\Variable.cs" />
+    <Compile Include="ExpressionBuilder\Tokenizer.cs" />
+    <Compile Include="ExpressionBuilder\ExpressionBuilder.cs" />
     <Compile Include="VariableContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include=".gitignore" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

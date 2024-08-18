@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutoCalculator.IExecute
+namespace AutoCalculator.Expression
 {
-    class Variable : IExecute
+    class Variable : IExpression
     {
         char ch;
 

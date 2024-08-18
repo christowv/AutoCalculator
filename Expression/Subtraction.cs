@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutoCalculator.IExecute
+namespace AutoCalculator.Expression
 {
-    class Subtraction : IExecute
+    class Subtraction : IExpression
     {
-        IExecute left;
-        IExecute right;
+        IExpression left;
+        IExpression right;
 
-        public Subtraction(IExecute left, IExecute right)
+        public Subtraction(IExpression left, IExpression right)
         {
             this.left = left;
             this.right = right;
