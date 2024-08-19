@@ -16,7 +16,7 @@ namespace AutoCalculator
             context.SetVariable('x', 2);
 
             ExpressionBuilder builder = new ExpressionBuilder();
-            IExpression exp = builder.GetTree("(2+2)*x");
+            IExpression exp = builder.GetTree("2+2*pow(x, 1)");
 
             Console.WriteLine((double) exp.Execute(context));
 

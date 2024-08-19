@@ -13,7 +13,7 @@ namespace AutoCalculator.Trees
         {
             List<string> tokenized = new List<string>();
 
-            exp = exp.ToLower().Replace(" ", "").Replace(".", ",");
+            exp = exp.ToLower().Replace(" ", "");
 
             for (int i = 0; i < exp.Length; i++)
             {
@@ -27,6 +27,10 @@ namespace AutoCalculator.Trees
                 else if (IsLetter(ch))
                 {
                     token = CaptureWord(exp, ref i);
+                }
+                else if (IsComma(ch))
+                {
+                    token = ",";
                 }
                 else if (IsLeftBracket(ch))
                 {
@@ -55,7 +59,7 @@ namespace AutoCalculator.Trees
         {
             string number = "" + expr[i];
 
-            while (i + 1 < expr.Length && (IsDigit(expr[i + 1]) || expr[i + 1] == ',' || expr[i + 1] == '/'))
+            while (i + 1 < expr.Length && (IsDigit(expr[i + 1]) || expr[i + 1] == '.' || expr[i + 1] == '/'))
             {
                 number += expr[++i];
             }
@@ -87,7 +91,12 @@ namespace AutoCalculator.Trees
 
         static private bool IsOperator(char ch)
         {
-            return Regex.IsMatch(ch.ToString(), @"[+\-\*\:\^\=]");
+            return Regex.IsMatch(ch.ToString(), @"[+\-\*\:\=]");
+        }
+
+        static private bool IsComma(char ch)
+        {
+            return ch == ',';
         }
 
         static private bool IsLeftBracket(char ch)

@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoCalculator.Expression;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AutoCalculator.Trees
 {
@@ -29,12 +30,12 @@ namespace AutoCalculator.Trees
             return result;
         }
 
-        // E -> T±T±T±T± ... ±T
+        // E -> T+- ... +-T
         private IExpression GetExpression()
         {
             IExpression a = GetTerm();
 
-            while (pos < tokens.Length)
+            while (IsOutLength())
             {
                 string oper = tokens[pos];
 
@@ -62,12 +63,12 @@ namespace AutoCalculator.Trees
             return a;
         }
 
-        // T -> F*/F*/F*/*/ ... */F
+        // T -> A*/ ... */A
         private IExpression GetTerm()
         {
-            IExpression a = GetFactor();
+            IExpression a = GetAbc();
 
-            while (pos < tokens.Length) {
+            while (IsOutLength()) {
                 string oper = tokens[pos];
 
                 if (oper == "*" || oper == ":")
@@ -79,7 +80,7 @@ namespace AutoCalculator.Trees
                     break;
                 }
 
-                IExpression b = GetFactor();
+                IExpression b = GetAbc();
 
                 if (oper == "*")
                 {
@@ -94,6 +95,51 @@ namespace AutoCalculator.Trees
             return a;
         }
 
+        // A -> abc(E,E ... ,E)
+        private IExpression GetAbc()
+        {
+            string func = tokens[pos];
+
+            if (func == "pow")
+            {
+                pos++;
+            }
+            else
+            {
+                return GetFactor();
+            }
+
+            string next = tokens[pos];
+
+            if (next == "(")
+            {
+                pos++;
+                IExpression[] args = GetArgs(2);
+
+                string closingBracket;
+                if (IsOutLength())
+                {
+                    closingBracket = tokens[pos];
+                }
+                else
+                {
+                    throw new Exception("No end expression");
+                }
+
+                if (IsOutLength() && closingBracket == ")")
+                {
+                    pos++;
+                    return new Power(args[0], args[1]);
+                }
+                else
+                {
+                    throw new Exception("End is not a bracket");
+                }
+            }
+
+            throw new Exception("Need bracket after function");
+        }
+
         // F -> N | (E)
         private IExpression GetFactor()
         {
@@ -106,7 +152,7 @@ namespace AutoCalculator.Trees
 
                 result = GetExpression();
                 string closingBracket;
-                if (pos < tokens.Length)
+                if (IsOutLength())
                 {
                     closingBracket = tokens[pos];
                 }
@@ -115,7 +161,7 @@ namespace AutoCalculator.Trees
                     throw new Exception("No end expression");
                 }
 
-                if (pos < tokens.Length && closingBracket == ")")
+                if (!IsOutLength() && closingBracket == ")")
                 {
                     pos++;
                     return result;
@@ -132,14 +178,43 @@ namespace AutoCalculator.Trees
                 return new Variable(next[0]);
             }
 
-            return ParseFraction(next);
+            return GetFraction(next);
         }
 
-        private Fraction ParseFraction(string value)
+        private bool IsOutLength()
         {
-            if (Regex.IsMatch(value, @"^[0-9]+,[0-9]+$"))
+            return pos < tokens.Length;
+        }
+
+        private IExpression[] GetArgs(int n)
+        {
+            IExpression[] args = new IExpression[n];
+
+            for (int i = 0; i < n; i++)
             {
-                string[] pieces = value.Split(',');
+                args[i] = GetExpression();
+
+                if (i < args.Length - 1)
+                {
+                    if (tokens[pos] == ",")
+                    {
+                        pos++;
+                    }
+                    else
+                    {
+                        throw new Exception("No comma");
+                    }
+                }
+            }
+
+            return args;
+        }
+
+        private Fraction GetFraction(string value)
+        {
+            if (Regex.IsMatch(value, @"^[0-9]+.[0-9]+$"))
+            {
+                string[] pieces = value.Replace('.', ',').Split(',');
                 double d = double.Parse(value);
 
                 return new Fraction(d);
