@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoCalculator.Expression;
-using AutoCalculator.Trees;
+using AutoCalculator.ExpressionBuilder;
 
 namespace AutoCalculator
 {
@@ -15,10 +15,10 @@ namespace AutoCalculator
             VariableContext context = new VariableContext();
             context.SetVariable('x', 2);
 
-            ExpressionBuilder builder = new ExpressionBuilder();
-            IExpression exp = builder.GetTree("2+2*pow(x, 1)");
+            RecursiveDescentBuilder builder = new RecursiveDescentBuilder();
+            IExpression exp = builder.GetTree("-2");
 
-            Console.WriteLine((double) exp.Execute(context));
+            Console.WriteLine(exp.Execute(context));
 
             Console.ReadKey();
         }

@@ -6,20 +6,18 @@ using System.Threading.Tasks;
 
 namespace AutoCalculator.Expression
 {
-    class Power : IExpression
+    class SquareRoot : IExpression
     {
         IExpression left;
-        IExpression right;
 
-        public Power(IExpression left, IExpression right)
+        public SquareRoot(IExpression left)
         {
             this.left = left;
-            this.right = right;
         }
 
         public Fraction Execute(VariableContext context)
         {
-            return new Fraction(Math.Pow(left.Execute(context), right.Execute(context)));
+            return new Fraction(Math.Sqrt(left.Execute(context)));
         }
     }
 }

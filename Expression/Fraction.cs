@@ -42,9 +42,14 @@ namespace AutoCalculator.Expression
             return this;
         }
 
-        public static explicit operator double(Fraction value)
+        public static implicit operator double(Fraction value)
         {
             return (double)value.Numerator / value.Denominator;
+        }
+
+        public static explicit operator int(Fraction value)
+        {
+            return (int)value.Numerator / value.Denominator;
         }
 
         public static bool operator ==(Fraction a, Fraction b)
@@ -57,6 +62,16 @@ namespace AutoCalculator.Expression
         public static bool operator !=(Fraction a, Fraction b)
         {
             return !(a == b);
+        }
+
+        public static bool operator >(Fraction a, Fraction b)
+        {
+            return a - b > 0;
+        }
+
+        public static bool operator <(Fraction a, Fraction b)
+        {
+            return a - b < 0;
         }
 
         public static Fraction operator + (Fraction f)

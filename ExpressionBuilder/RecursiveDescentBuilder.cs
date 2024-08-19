@@ -6,16 +6,15 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoCalculator.Expression;
-using static System.Net.Mime.MediaTypeNames;
 
-namespace AutoCalculator.Trees
+namespace AutoCalculator.ExpressionBuilder
 {
-    class ExpressionBuilder
+    class RecursiveDescentBuilder
     {
         private string[] tokens;
         private int pos;
 
-        public ExpressionBuilder()
+        public RecursiveDescentBuilder()
         {
 
         }
@@ -35,7 +34,7 @@ namespace AutoCalculator.Trees
         {
             IExpression a = GetTerm();
 
-            while (IsOutLength())
+            while (!IsOutLength())
             {
                 string oper = tokens[pos];
 
@@ -68,7 +67,7 @@ namespace AutoCalculator.Trees
         {
             IExpression a = GetAbc();
 
-            while (IsOutLength()) {
+            while (!IsOutLength()) {
                 string oper = tokens[pos];
 
                 if (oper == "*" || oper == ":")
@@ -100,7 +99,7 @@ namespace AutoCalculator.Trees
         {
             string func = tokens[pos];
 
-            if (func == "pow")
+            if (func == "pow" || func == "sqrt" || func == "max" || func == "min")
             {
                 pos++;
             }
@@ -114,10 +113,10 @@ namespace AutoCalculator.Trees
             if (next == "(")
             {
                 pos++;
-                IExpression[] args = GetArgs(2);
+                IExpression[] args = GetArgs();
 
                 string closingBracket;
-                if (IsOutLength())
+                if (!IsOutLength())
                 {
                     closingBracket = tokens[pos];
                 }
@@ -126,10 +125,26 @@ namespace AutoCalculator.Trees
                     throw new Exception("No end expression");
                 }
 
-                if (IsOutLength() && closingBracket == ")")
+                if (closingBracket == ")")
                 {
                     pos++;
-                    return new Power(args[0], args[1]);
+
+                    if (func == "pow")
+                    {
+                        return new Power(args[0], args[1]);
+                    }
+                    else if (func == "sqrt")
+                    {
+                        return new SquareRoot(args[0]);
+                    }
+                    else if (func == "max")
+                    {
+                        return new Maximal(args);
+                    }
+                    else if (func == "min")
+                    {
+                        return new Minimal(args);
+                    }
                 }
                 else
                 {
@@ -143,8 +158,16 @@ namespace AutoCalculator.Trees
         // F -> N | (E)
         private IExpression GetFactor()
         {
+            bool IsMinus = false;
+
+            if (tokens[pos] == "-")
+            {
+                IsMinus = true;
+                pos++;
+            }
+
             string next = tokens[pos];
-            IExpression result = null;
+            IExpression result;
 
             if (next == "(")
             {
@@ -152,7 +175,7 @@ namespace AutoCalculator.Trees
 
                 result = GetExpression();
                 string closingBracket;
-                if (IsOutLength())
+                if (!IsOutLength())
                 {
                     closingBracket = tokens[pos];
                 }
@@ -164,79 +187,71 @@ namespace AutoCalculator.Trees
                 if (!IsOutLength() && closingBracket == ")")
                 {
                     pos++;
-                    return result;
                 }
                 else
                 {
                     throw new Exception("End is not a bracket");
                 }
             }
+            else if(next.Length == 1 && Char.IsLetter(next[0]))
+            {
+                result = new Variable(next[0]);
+            }
+            else
+            {
+                string[] splitted = next.Split('/');
+                int numerator = Convert.ToInt32(splitted[0]);
+                int denominator = Convert.ToInt32(splitted[1]);
+
+                result = new Fraction(numerator, denominator);
+            }
             pos++;
 
-            if(next.Length == 1 && Char.IsLetter(next[0]))
-            {
-                return new Variable(next[0]);
-            }
-
-            return GetFraction(next);
+            return SetUnarMinus(result, IsMinus);
         }
 
         private bool IsOutLength()
         {
-            return pos < tokens.Length;
+            return pos > tokens.Length-1;
         }
 
-        private IExpression[] GetArgs(int n)
+        private IExpression SetUnarMinus(IExpression exp, bool IsMinus)
         {
-            IExpression[] args = new IExpression[n];
+            if (IsMinus)
+                return new Multiplication(exp, new Fraction(-1));
 
-            for (int i = 0; i < n; i++)
+            return exp;
+        }
+
+        private IExpression[] GetArgs()
+        {
+            List<IExpression> args = new List<IExpression>();
+
+            while(!IsOutLength())
             {
-                args[i] = GetExpression();
+                args.Add(GetExpression());
 
-                if (i < args.Length - 1)
+                string next;
+                if (!IsOutLength())
                 {
-                    if (tokens[pos] == ",")
-                    {
-                        pos++;
-                    }
-                    else
-                    {
-                        throw new Exception("No comma");
-                    }
+                   next = tokens[pos];
+                }
+                else
+                {
+                    break;
+                }
+
+                if (!IsOutLength() && next == ",")
+                {
+                    pos++;
+                }
+                else
+                {
+                    break;
                 }
             }
 
-            return args;
-        }
-
-        private Fraction GetFraction(string value)
-        {
-            if (Regex.IsMatch(value, @"^[0-9]+.[0-9]+$"))
-            {
-                string[] pieces = value.Replace('.', ',').Split(',');
-                double d = double.Parse(value);
-
-                return new Fraction(d);
-            }
-            else if (Regex.IsMatch(value, @"^[0-9]+/[0-9]+$"))
-            {
-                string[] pieces = value.Split('/');
-                int a = int.Parse(pieces[0]);
-                int b = int.Parse(pieces[1]);
-
-                return new Fraction(a, b);
-            }
-            else if (Regex.IsMatch(value, @"^[0-9]+$"))
-            {
-                int a = int.Parse(value);
-
-                return new Fraction(a);
-            }
-            else
-            {
-                throw new Exception("Unknown number format");
-            }
+            return args.ToArray();
         }
     }
 }

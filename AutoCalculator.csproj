@@ -47,14 +47,17 @@
     <Compile Include="Expression\Division.cs" />
     <Compile Include="Expression\Fraction.cs" />
     <Compile Include="Expression\IExpression.cs" />
+    <Compile Include="Expression\Maximal.cs" />
+    <Compile Include="Expression\Minimal.cs" />
     <Compile Include="Expression\Multiplication.cs" />
     <Compile Include="Expression\Power.cs" />
+    <Compile Include="Expression\SquareRoot.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Expression\Subtraction.cs" />
     <Compile Include="Expression\Variable.cs" />
     <Compile Include="ExpressionBuilder\Tokenizer.cs" />
-    <Compile Include="ExpressionBuilder\ExpressionBuilder.cs" />
+    <Compile Include="ExpressionBuilder\RecursiveDescentBuilder.cs" />
     <Compile Include="VariableContext.cs" />
   </ItemGroup>
   <ItemGroup>

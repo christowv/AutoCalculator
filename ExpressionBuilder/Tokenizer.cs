@@ -1,11 +1,12 @@
-﻿using System;
+﻿using AutoCalculator.Expression;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace AutoCalculator.Trees
+namespace AutoCalculator.ExpressionBuilder
 {
     static class Tokenizer
     {
@@ -64,6 +65,8 @@ namespace AutoCalculator.Trees
                 number += expr[++i];
             }
 
+            number = PrepareNumber(number);
+
             return number;
         }
 
@@ -77,6 +80,31 @@ namespace AutoCalculator.Trees
             }
 
             return letter;
+        }
+
+        static private string PrepareNumber(string value)
+        {
+            if (Regex.IsMatch(value, @"^[0-9]+[.][0-9]+$"))
+            {
+                value = value.Replace('.', ',');
+                double d = Convert.ToDouble(value);
+
+                Fraction f = new Fraction(d);
+
+                return $"{f.Numerator}/{f.Denominator}";
+            }
+            else if (Regex.IsMatch(value, @"^[0-9]+[/][0-9]+$"))
+            {
+                return value;
+            }
+            else if (Regex.IsMatch(value, @"^[0-9]+$"))
+            {
+                return $"{value}/1";
+            }
+            else
+            {
+                throw new Exception("Unknown number format");
+            }
         }
 
         static private bool IsDigit(char ch)
