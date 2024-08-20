@@ -21,5 +21,10 @@ namespace AutoCalculator.Expression
         {
             return left.Execute(context) - right.Execute(context);
         }
+
+        public override string ToString()
+        {
+            return $"{left}+{right}";
+        }
     }
 }

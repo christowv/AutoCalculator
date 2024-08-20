@@ -19,5 +19,10 @@ namespace AutoCalculator.Expression
         {
             return context.GetVariable(ch);
         }
+
+        public override string ToString()
+        {
+            return $"{ch}";
+        }
     }
 }

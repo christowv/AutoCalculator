@@ -16,9 +16,9 @@ namespace AutoCalculator
             context.SetVariable('x', 2);
 
             RecursiveDescentBuilder builder = new RecursiveDescentBuilder();
-            IExpression exp = builder.GetTree("-2");
+            IExpression exp = builder.GetTree("((2+2-3)*2:3+pow(2,2)):2");
 
-            Console.WriteLine(exp.Execute(context));
+            Console.WriteLine($"{exp} = {exp.Execute(context).Simplify()}");
 
             Console.ReadKey();
         }

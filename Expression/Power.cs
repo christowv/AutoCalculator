@@ -21,5 +21,10 @@ namespace AutoCalculator.Expression
         {
             return new Fraction(Math.Pow(left.Execute(context), right.Execute(context)));
         }
+
+        public override string ToString()
+        {
+            return $"pow({left}, {right})";
+        }
     }
 }

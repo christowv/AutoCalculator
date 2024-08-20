@@ -10,9 +10,9 @@ namespace AutoCalculator.Expression
     {
         IExpression[] args;
 
-        public Minimal(params IExpression[] a)
+        public Minimal(params IExpression[] ar)
         {
-            args = a;
+            args = ar;
         }
 
         public Fraction Execute(VariableContext context)
@@ -28,6 +28,12 @@ namespace AutoCalculator.Expression
             }
 
             return min;
+        }
+
+        public override string ToString()
+        {
+            string list = ExpressionString.ListArgs(args);
+            return $"min({list})";
         }
     }
 }

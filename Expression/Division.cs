@@ -21,5 +21,13 @@ namespace AutoCalculator.Expression
         {
             return left.Execute(context) / right.Execute(context);
         }
+
+        public override string ToString()
+        {
+            string shLeft = ExpressionString.ShowSignificantBrackets(this, left);
+            string shRight = ExpressionString.ShowSignificantBrackets(this, right);
+
+            return $"{shLeft}:{shRight}";
+        }
     }
 }

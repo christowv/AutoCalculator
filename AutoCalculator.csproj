@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Expression\Addition.cs" />
     <Compile Include="Expression\Division.cs" />
+    <Compile Include="Expression\ExpressionString.cs" />
     <Compile Include="Expression\Fraction.cs" />
     <Compile Include="Expression\IExpression.cs" />
     <Compile Include="Expression\Maximal.cs" />

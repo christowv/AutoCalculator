@@ -9,5 +9,6 @@ namespace AutoCalculator.Expression
     interface IExpression
     {
         Fraction Execute(VariableContext context);
+        string ToString();
     }
 }

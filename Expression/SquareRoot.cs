@@ -8,16 +8,21 @@ namespace AutoCalculator.Expression
 {
     class SquareRoot : IExpression
     {
-        IExpression left;
+        IExpression value;
 
-        public SquareRoot(IExpression left)
+        public SquareRoot(IExpression a)
         {
-            this.left = left;
+            this.value = a;
         }
 
         public Fraction Execute(VariableContext context)
         {
-            return new Fraction(Math.Sqrt(left.Execute(context)));
+            return new Fraction(Math.Sqrt(value.Execute(context)));
+        }
+
+        public override string ToString()
+        {
+            return $"sqrt({value})";
         }
     }
 }

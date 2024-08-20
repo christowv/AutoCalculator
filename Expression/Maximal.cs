@@ -29,5 +29,11 @@ namespace AutoCalculator.Expression
 
             return max;
         }
+
+        public override string ToString()
+        {
+            string list = ExpressionString.ListArgs(args);
+            return $"max({list})";
+        }
     }
 }

@@ -184,11 +184,7 @@ namespace AutoCalculator.ExpressionBuilder
                     throw new Exception("No end expression");
                 }
 
-                if (!IsOutLength() && closingBracket == ")")
-                {
-                    pos++;
-                }
-                else
+                if (IsOutLength() || closingBracket != ")")
                 {
                     throw new Exception("End is not a bracket");
                 }
